@@ -7,7 +7,7 @@ import com.javareact.despachos.dispatch.model.Dispatch;
 import com.javareact.despachos.dispatch.model.DispatchPackage;
 import com.javareact.despachos.dispatch.repository.DispatchPackageRepository;
 import com.javareact.despachos.dispatch.repository.DispatchRepository;
-import com.javareact.despachos.dispatch.saga.AssignmentSaga;
+import com.javareact.despachos.capacity.saga.AssignmentSaga;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

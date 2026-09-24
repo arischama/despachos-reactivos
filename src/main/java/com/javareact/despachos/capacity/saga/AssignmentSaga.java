@@ -1,4 +1,4 @@
-package com.javareact.despachos.dispatch.saga;
+package com.javareact.despachos.capacity.saga;
 
 import com.javareact.despachos.capacity.service.CapacityService;
 import com.javareact.despachos.dispatch.dto.PackageItemRequest;

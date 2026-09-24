@@ -1,4 +1,26 @@
 package com.javareact.despachos.dispatch.dto;
 
-public record DispatchCreateRequest() {
+import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+
+import java.util.List;
+
+public record DispatchCreateRequest(
+
+        @NotNull(message = "El clienteId es obligatorio")
+        @JsonProperty("clienteId")
+        Long customerId,
+
+        @NotBlank(message = "La ciudad es obligatoria")
+        @JsonProperty("ciudad")
+        String city,
+
+        @NotEmpty(message = "Debe incluir al menos un paquete")
+        @Valid
+        @JsonProperty("paquetes")
+        List<PackageItemRequest> packages
+) {
 }

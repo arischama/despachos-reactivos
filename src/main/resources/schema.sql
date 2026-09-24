@@ -6,7 +6,7 @@ DROP TABLE IF EXISTS despacho;
 DROP TABLE IF EXISTS vehiculo;
 
 CREATE TABLE vehiculo (
-    id           BIGINT PRIMARY KEY,
+    id           BIGSERIAL PRIMARY KEY,
     placa        VARCHAR(10)  NOT NULL UNIQUE,
     ciudad       VARCHAR(8)   NOT NULL,
     cupo_kg      INT          NOT NULL CHECK (cupo_kg >= 0),      -- el CHECK delata la carrera en la demo
@@ -42,3 +42,7 @@ INSERT INTO vehiculo (id, placa, ciudad, cupo_kg) VALUES
     (2, 'XYZ987', 'MDE', 200),
     (3, 'JKL456', 'CLO', 800)
 ON CONFLICT (id) DO NOTHING;
+
+SELECT setval(pg_get_serial_sequence('vehiculo', 'id'), COALESCE((SELECT MAX(id)
+FROM vehiculo), 1));
+

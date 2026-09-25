@@ -48,11 +48,18 @@
 
 ---
 
-## Decisiones propias
+## 5. Llamadas simultáneas con `Mono.zip` y la personalización de la resiliencia por cliente
 
-## 5. <título>
+* **Opción:** Invocar los tres servicios externos (`rate`, `weather`, `risk`) en paralelo con `Mono.zip` en `CarrierClient.java`, empleando mecanismos de resiliencia distintos:
+  * *Rate:* Retrasos exponenciales con estrategia de retroceso (`retryWhen(Retry.backoff(3, 200ms))`) para manejar fallos temporales, cayendo de vuelta a la tasa de catálogo base.
+  * *Weather:* Almacenamiento en caché de la respuesta por 10 minutos (`.cache(Duration.ofMinutes(10))`).
+  * *Risk:* Límite duro de 800 ms de tiempo de espera (`.timeout(Duration.ofMillis(800))`) junto con una puntuación inicial conservadora de riesgo.
+* **Opciones rechazadas:** *Invocar los tres llamadas externas secuencialmente a través de `flatMap`. *Usar un mecanismo de resiliencia uniforme para todos los clientes.
+* **Razonamiento:** La serialización de las peticiones daría como resultado un sobrecarga de red (I/O) acumulativo.Usar `Mono.zip` permite reducir la latencia general al de el componente más lento solamente (SLA < 1s). Además los perfiles de fallo de los tres servicios externos son distintos y por lo tanto la personalización de la resiliencia por cliente es necesaria para evitar fallos en cascada.>
 
-- **Elegimos:** <>
-- **Descartamos:** <>
-- **Porque:** <>
-- **Se rompe si:** <>
+---
+# 6. Rastreabilidad con 'Contexto de Reactor' en lugar de 'ThreadLocal' o Parámetros
+
+* **Lo que decidimos:** Usar el identificador 'X-Traza-Id' a través de 'TraceWebFilter' y 'contextWrite()' seguido de un uso desacoplado en capas profundas a través de 'deferContextual()'.
+* **Lo que descartamos:** El uso de 'ThreadLocal' (MDC legado) y el paso del 'trazaId' como parámetro a cada método de servicio y repositorio.
+* **Por qué:** La ejecución de la cadena reactiva en Spring WebFlux se realiza en el pool del bucle de eventos en diferentes hilos, por lo que 'ThreadLocal' pierde sus valores y se contamina con los valores de la solicitud de otros usuarios. El paso manual del parámetro a través de diferentes métodos contamina la firma del código de dominio. 'Contexto de Reactor' utiliza la suscripción del flujo reactivo "hacia arriba" para hacerlo seguro entre hilos.

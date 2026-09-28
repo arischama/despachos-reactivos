@@ -44,20 +44,17 @@ public class DispatchStreamService {
         );
 
         return sink.asFlux()
-                .onBackpressureBuffer(STREAM_BUFFER_SIZE, __ -> {}, BufferOverflowStrategy.DROP_OLDEST)
-                .limitRate(32);
+                .onBackpressureLatest();
     }
 
     public Flux<DispatchResponse> hotBoardStream() {
         return hotBoardSink.asFlux()
-                .onBackpressureBuffer(STREAM_BUFFER_SIZE, __ -> {}, BufferOverflowStrategy.DROP_OLDEST)
-                .limitRate(32);
+                .onBackpressureLatest();
     }
 
     public Flux<DispatchResponse> reportStream() {
         return reportSink.asFlux()
-                .onBackpressureBuffer(STREAM_BUFFER_SIZE, __ -> {}, BufferOverflowStrategy.DROP_OLDEST)
-                .limitRate(32);
+                .onBackpressureLatest();
     }
 
     public Mono<Void> consume(Flux<DispatchResponse> events) {

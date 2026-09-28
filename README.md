@@ -29,7 +29,7 @@ Este proyecto implementa un servicio reactivo y no bloqueante para la gestión y
 
 ### Paso 1: Iniciar la Base de Datos PostgreSQL en Docker
 
-Asegúrate de tener corriendo el contenedor de PostgreSQL con las credenciales configuradas para R2DBC (base de datos `despachos`, usuario `postgres`, contraseña `postgres` en puerto `5432`):
+Asegúrate de tener corriendo el contenedor de PostgreSQL con las credenciales configuradas para R2DBC (base de datos `despachos`, usuario `postgres`, contraseña `admin123` en puerto `5432`):
 
 ```bash
 docker compose up -d

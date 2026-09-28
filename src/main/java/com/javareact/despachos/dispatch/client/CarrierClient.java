@@ -17,7 +17,7 @@ public class CarrierClient {
     private final WebClient webClient;
 
     public CarrierClient(WebClient.Builder builder) {
-        this.webClient = builder.baseUrl("http://localhost:8081/external").build();
+        this.webClient = builder.baseUrl("http://localhost:8082/external").build();
     }
 
     public record RateResult(@JsonProperty("montoBase") Double baseFare) {}

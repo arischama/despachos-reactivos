@@ -1,5 +1,5 @@
 server:
-  port: 8081
+  port: 8082
 
 spring:
 
@@ -8,7 +8,7 @@ spring:
       mode: always
 
   r2dbc:
-    url: r2dbc:postgresql://localhost:5432/despachos
+    url: r2dbc:postgresql://localhost:5433/despachos
     username: postgres
     password: admin123
 

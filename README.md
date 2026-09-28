@@ -13,7 +13,7 @@ Este proyecto implementa un servicio reactivo y no bloqueante para la gestión y
   
   **Cristian Camilo López (crcalope)** usuario de github: **cristianca23**
 
-  **Maria Cristina Carmona Clavijo ()** usuario de github: ****
+  **Maria Cristina Carmona Clavijo (marcccla)** usuario de github: **marcccla**
 
 * **Paquete Base:** `com.javareact.despachos`
 

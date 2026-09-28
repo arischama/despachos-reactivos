@@ -2,6 +2,7 @@ package com.javareact.despachos.shared.exception;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ProblemDetail;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -13,7 +14,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ZonaRiesgosaException.class)
     public ProblemDetail handleZonaRiesgosa(ZonaRiesgosaException ex) {
         log.warn("Despacho rechazado por riesgo: {}", ex.getMessage());
-        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.UNPROCESSABLE_ENTITY, ex.getMessage());
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(422), ex.getMessage());
         problem.setTitle("Zona riesgosa");
         return problem;
     }

@@ -7,6 +7,7 @@ import com.javareact.despachos.dispatch.model.Dispatch;
 import com.javareact.despachos.dispatch.model.DispatchPackage;
 import com.javareact.despachos.dispatch.repository.DispatchPackageRepository;
 import com.javareact.despachos.dispatch.repository.DispatchRepository;
+import com.javareact.despachos.dispatch.stream.DispatchStreamService;
 import com.javareact.despachos.capacity.saga.AssignmentSaga;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +29,7 @@ public class DispatchService {
     private final AssignmentSaga assignmentSaga;
     private final CarrierClient carrierClient;
     private final TransactionalOperator transactionalOperator;
+    private final DispatchStreamService dispatchStreamService;
 
     public Mono<DispatchResponse> createDispatch(DispatchCreateRequest request) {
         Dispatch initialDispatch = Dispatch.builder()
@@ -56,7 +58,11 @@ public class DispatchService {
                                     return dispatchRepository.save(assignedDispatch)
                                             .flatMap(d -> dispatchPackageRepository.saveAll(packagesToSave).then(Mono.just(d)))
                                             .as(transactionalOperator::transactional)
-                                            .map(d -> new DispatchResponse(d.id(), d.status(), d.fare(), d.riskScore(), d.expiresAt()));
+                                            .map(d -> {
+                                                DispatchResponse response = new DispatchResponse(d.id(), d.status(), d.fare(), d.riskScore(), d.expiresAt());
+                                                dispatchStreamService.publish(response);
+                                                return response;
+                                            });
                                 })
                                 .onErrorResume(error -> assignmentSaga.compensate(
                                         request.packages().stream().map(p -> new AssignmentSaga.ReservedItem(p.vehicleId(), p.weightKg())).toList()
@@ -74,6 +80,10 @@ public class DispatchService {
                     return dispatchRepository.save(dispatch.withStatus("EN_RUTA"));
                 })
                 .as(transactionalOperator::transactional)
-                .map(d -> new DispatchResponse(d.id(), d.status(), d.fare(), d.riskScore(), d.expiresAt()));
+                .map(d -> {
+                    DispatchResponse response = new DispatchResponse(d.id(), d.status(), d.fare(), d.riskScore(), d.expiresAt());
+                    dispatchStreamService.publish(response);
+                    return response;
+                });
     }
 }

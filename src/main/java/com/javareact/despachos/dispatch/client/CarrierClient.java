@@ -2,7 +2,6 @@ package com.javareact.despachos.dispatch.client;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.javareact.despachos.shared.exception.ZonaRiesgosaException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -17,7 +16,6 @@ public class CarrierClient {
 
     private final WebClient webClient;
 
-    @Autowired
     public CarrierClient(WebClient.Builder builder) {
         this.webClient = builder.baseUrl("http://localhost:8081/external").build();
     }
